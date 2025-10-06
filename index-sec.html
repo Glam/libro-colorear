@@ -315,16 +315,14 @@
       // Endpoint y API Key de Gemini 2.5 Flash Image Preview (Nano Banana)
       const PROXY_URL = "https://proxy.jlquintero.workers.dev/"; 
       try {
-        const response = await fetch(`${API_URL}?key=${API_KEY}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt + " black and white, thick lines, coloring page" }] }],
-            generationConfig: { temperature: 0.4 }
-          })
-        });
+const response = await fetch(PROXY_URL, { // Llama al Worker
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ // El Worker se encargará de añadir la API Key.
+    contents: [{ parts: [{ text: prompt + " black and white, thick lines, coloring page" }] }],
+    generationConfig: { temperature: 0.4 }
+  })
+});
 
         const data = await response.json();
         const base64Image = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
