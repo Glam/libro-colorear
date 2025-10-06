@@ -300,8 +300,7 @@
     canvas.addEventListener('pointerup', endDraw);
     canvas.addEventListener('pointerleave', endDraw);
 
-// --- Generación de imagen para colorear ---
-    // NOTA: EL CÓDIGO AHORA LLAMA A TU WORKER EN LUGAR DE A LA API DE GOOGLE DIRECTAMENTE.
+    // --- Generación de imagen para colorear ---
     async function generateImage(prompt) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       undoStack = [];
@@ -313,25 +312,24 @@
         return;
       }
 
-      // Endpoint del Cloudflare Worker que actúa como proxy
-      // Usa un endpoint relativo, el cual será interceptado por la ruta de Cloudflare
-      const WORKER_ENDPOINT = "https://gemini-coloring-book-proxy.jlquintero.workers.dev/"; 
+      // Endpoint y API Key de Gemini 2.5 Flash Image Preview (Nano Banana)
+      const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent";
+      const API_KEY = "AIzaSyBh2ydAx7f-RD_e7ztLXuWtHPqPkJA6Sn0"; // Reemplaza por tu API Key de Google
 
       try {
-       const response = await fetch(WORKER_ENDPOINT + "/api/generate-coloring-page", {
+        const response = await fetch(`${API_URL}?key=${API_KEY}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          // Enviamos solo el prompt base, el Worker agrega los modificadores de "coloring page"
-          body: JSON.stringify({ prompt: prompt }) 
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt + " black and white, thick lines, coloring page" }] }],
+            generationConfig: { temperature: 0.4 }
+          })
         });
 
         const data = await response.json();
-        
-        // El formato de la respuesta es el mismo que el de Google
         const base64Image = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
-        
         if (base64Image) {
           const img = new Image();
           img.onload = () => {
