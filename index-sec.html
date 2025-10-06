@@ -313,9 +313,7 @@
       }
 
       // Endpoint y API Key de Gemini 2.5 Flash Image Preview (Nano Banana)
-      const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent";
-      const API_KEY = "AIzaSyBh2ydAx7f-RD_e7ztLXuWtHPqPkJA6Sn0"; // Reemplaza por tu API Key de Google
-
+      const PROXY_URL = "https://proxy.jlquintero.workers.dev/"; 
       try {
         const response = await fetch(`${API_URL}?key=${API_KEY}`, {
           method: "POST",
