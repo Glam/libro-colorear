@@ -315,10 +315,10 @@
 
       // Endpoint del Cloudflare Worker que actúa como proxy
       // Usa un endpoint relativo, el cual será interceptado por la ruta de Cloudflare
-      const WORKER_ENDPOINT = "/api/generate-coloring-page"; 
+      const WORKER_ENDPOINT = "https://gemini-coloring-book-proxy.jlquintero.workers.dev/"; 
 
       try {
-        const response = await fetch(WORKER_ENDPOINT, {
+       const response = await fetch(WORKER_ENDPOINT + "/api/generate-coloring-page", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
